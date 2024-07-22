@@ -16,6 +16,10 @@ class db:
         if self.client.has_collection(collection_name=self.collection_name):
             if drop_existing:
                 self.client.drop_collection(collection_name=self.collection_name)
+                self.client.create_collection(
+                    collection_name=self.collection_name,
+                    dimension=vector_dimension,  # The vectors we will use in this demo has 768 dimensions
+                )
             else:
                 self.data_loaded = True
         else:
@@ -24,19 +28,17 @@ class db:
                 dimension=vector_dimension,  # The vectors we will use in this demo has 768 dimensions
             )
 
+    def is_data_loaded(self):
+        return self.data_loaded
+
     def load_data(self, data_path):
-        if self.data_loaded == True:
-            return
-        
         data = []
         id = 0
-        cwd = os.getcwd()
-        directory = os.fsencode(cwd)
 
-        for file in os.listdir(directory):
+        for file in os.listdir(data_path):
             filename = os.fsdecode(file)
             if filename.endswith(".txt"):
-                f = open(filename, "r")
+                f = open(data_path + "/" + file, "r")
                 sent_array = re.split(r"[.!?](?!$)", f.read())
                 sent_array = [s.strip() for s in sent_array if s != ' ' and s != '"' and s != '']
                 vectors = self.embedding_model.generate_embeddings(sent_array)

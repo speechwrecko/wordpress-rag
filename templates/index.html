@@ -2,12 +2,32 @@
 
 {% block body %}
 <div class="jumbotron">
-    <h1 class="display-4">Bootstrap starter template by {{ app_data['author'] }} </h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-    <p>Title: {{ app_data['html_title'] }}</p>
+    <h1 class="display-4">Wordpress Blog - RAG by {{ app_data['author'] }} </h1>
+    <p class="lead">Get answers to questions from any Wordpress blog</p>
+    <!--<p>Title: {{ app_data['html_title'] }}</p>-->
 
-    <hr class="my-4">
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <a class="btn btn-primary btn-lg" href="/contact" role="button">Contact</a>
+
+    <form action="/process_query" method="post">
+      <div class="form-group">
+        <!--<label for="queryInput">Query</label>-->
+        <input type="text" class="form-control" id="queryInput" name="queryInput" aria-describedby="queryHelp" placeholder="What do you want to know?">
+      </div>
+      <br>
+      <div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+    <br>
+    <br>
+    <div class='container'>
+      <!--<div class="col-lg-6">-->
+        <fieldset class="border p-2" >
+          <legend class="float-none w-auto p-2">Answer:</legend>
+            <p id="innerPara" style="padding-left: 10px;">
+              {{ app_data['answer'] }}
+          </p>
+    </fieldset>
+    <!--</div>-->
   </div>
+
 {% endblock %}
