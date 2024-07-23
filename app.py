@@ -71,11 +71,12 @@ def main():
 
     load_dotenv()
     blog_url = os.getenv('BLOG_POST_URL')
+    diffbot_token = os.getenv('DIFFBOT_TOKEN')
     data_path = "blog_files"
     vectordb = db("wordpress_rag.db", "wordpress_collection", 768, "default", False)
 
     if not vectordb.is_data_loaded():
-        blog_scraper = scraper(blog_url)
+        blog_scraper = scraper(blog_url, diffbot_token)
         post_urls = blog_scraper.get_wordpress_posts()
         blog_scraper.extract_text_from_posts(post_urls)
 

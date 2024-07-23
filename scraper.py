@@ -8,8 +8,9 @@ import time
 
 class scraper:
 
-    def __init__(self, wordpress_blog_url):
+    def __init__(self, wordpress_blog_url, diffbot_token):
         self.blog_url = wordpress_blog_url
+        self.token = diffbot_token
 
     def get_wordpress_posts(self, per_page=100):
         """
@@ -57,7 +58,7 @@ class scraper:
         for post_url in post_urls:
             params = {
                 'url': post_url,
-                'token': 'aa898574824e82c46365a90ef03fe08c'
+                'token': self.token
             }
             headers = {"accept": "application/json"}
 
