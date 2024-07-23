@@ -1,3 +1,9 @@
 ###### Peter's Starter Template for a Flask Web App ######
 ###### Requirements without Version Specifiers ######
 flask
+dotenv
+openai
+anthropic
+pymilvus
+sentence_transformers
+bs4
