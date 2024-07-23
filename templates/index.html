@@ -1,8 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+
 <div class="jumbotron">
-    <h1 class="display-4">Wordpress Blog - RAG by {{ app_data['author'] }} </h1>
+    <h1 class="display-4">Wordpress RAG by {{ app_data['author'] }} </h1>
     <p class="lead">Get answers to questions from any Wordpress blog</p>
     <!--<p>Title: {{ app_data['html_title'] }}</p>-->
 
@@ -14,14 +15,15 @@
       </div>
       <br>
       <div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary" onclick="loading();">Submit</button>
       </div>
     </form>
     <br>
     <br>
     <div class='container'>
       <!--<div class="col-lg-6">-->
-        <fieldset class="border p-2" >
+        <fieldset class="border p-2">
+          <div class="spinner-border" id="loading" style="display:none"></div>
           <legend class="float-none w-auto p-2">Answer:</legend>
             <p id="innerPara" style="padding-left: 10px;">
               {{ app_data['answer'] }}

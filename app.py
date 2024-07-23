@@ -6,7 +6,9 @@ https://github.com/petersimeth/basic-flask-template
 © MIT licensed, 2018-2023
 """
 
+import os
 from flask import Flask, render_template, request, url_for, jsonify, flash, redirect
+from dotenv import load_dotenv
 
 from scraper import scraper
 from db import db, embeddings
@@ -17,11 +19,11 @@ DEVELOPMENT_ENV = False
 app = Flask(__name__)
 
 app_data = {
-    "name": "Worpress RAG",
+    "name": "Wordpress RAG",
     "description": "Get answers to questions from any Wordpress blog",
-    "author": "Jason FLaks",
-    "html_title": "Worpress RAG",
-    "project_name": "SWorpress RAG",
+    "author": "Jason Flaks",
+    "html_title": "Wordpress RAG",
+    "project_name": "Wordpress RAG",
     "keywords": "wordpress, rag, llm",
     "answer": "",
 }
@@ -36,9 +38,9 @@ def about():
     return render_template("about.html", app_data=app_data)
 
 
-@app.route("/service")
+@app.route("/contact")
 def service():
-    return render_template("service.html", app_data=app_data)
+    return render_template("contact.html", app_data=app_data)
 
 
 @app.route("/process_query", methods=('GET', 'POST'))
@@ -71,8 +73,9 @@ def get_answer(query):
 def main():
     global data_path
     global vectordb
-    
-    blog_url = "https://speechwrecko.com"
+
+    load_dotenv()
+    blog_url = os.getenv('BLOG_POST_URL')
     data_path = "blog_files"
     vectordb = db("wordpress_rag.db", "wordpress_collection", 768, "default", False)
 
