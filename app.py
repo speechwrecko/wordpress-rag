@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Peter Simeth's basic flask pretty youtube downloader (v1.3)
-https://github.com/petersimeth/basic-flask-template
-© MIT licensed, 2018-2023
-"""
 
 import os
 from flask import Flask, render_template, request, url_for, jsonify, flash, redirect
