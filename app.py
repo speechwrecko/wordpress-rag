@@ -21,6 +21,7 @@ app_data = {
     "project_name": "Wordpress RAG",
     "keywords": "wordpress, rag, llm",
     "answer": "",
+    "source": "",
 }
 
 @app.route("/")
@@ -47,22 +48,19 @@ def process_query():
             flash('You must ask a question!')
             result = 500
         else:
-            app_data["answer"] = get_answer(query)
+            app_data["answer"], app_data["source"] = get_answer(query)
             result = 204
-            #return redirect(url_for('index'))
-            
-    #return '', 204
-    #return render_template("index.html", app_data=app_data)
+
     return redirect(url_for('index'))
 
 def get_answer(query):
     try:
-        res = vectordb.search(query)
+        source = vectordb.search(query)
         chatbot = chat("anthropic")
-        message = chatbot.create_response(query, data_path + "/" + res)
+        message = chatbot.create_response(query, data_path + "/" + source)
     except:
         message = "Sorry I am broken!!!"
-    return message
+    return message, source.replace(".txt", "")
 
 
 def main():
