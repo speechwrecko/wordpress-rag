@@ -7,6 +7,7 @@ import os
 import time
 
 class scraper:
+    blog_storage_path = "blog_files"
 
     def __init__(self, wordpress_blog_url, diffbot_token):
         self.blog_url = wordpress_blog_url
@@ -49,7 +50,7 @@ class scraper:
     
     def extract_text_from_posts(self, post_urls):
         diffbot_url = 'https://api.diffbot.com/v3/analyze'
-        path = "blog_files"
+        path = scraper.blog_storage_path
         isExist = os.path.exists(path)
         
         if not isExist:
@@ -73,8 +74,28 @@ class scraper:
                 if not os.path.isfile(file_path):
                     with open(file_path, "w") as file:
                         file.write(text)
+
+                log_scrape_event(post_url, filename.replace(".txt", ""))
             except:
                 pass
 
             time.sleep(12)
+
+        def log_scrape_event(self, url, filename):
+            scrape_event = {"url": url, "timestamp": time.time()}
+            log_file_path = scraper.blog_storage_path + "/" + "scraper_log.json"
+            
+            if os.path.isfile(log_file_path):
+                with open(log_file_path, "rw") as file:
+                    log_data = json.load(file)
+                    if filename in log_data:
+                        return
+                    else:
+                        log_data[filename] = scrape_event
+            else:
+                with open(log_file_path, "w") as file:
+                    log_data = {filename: scrape_event}
+            
+            json.dump(log_data, log_file_path)
+
 
