@@ -19,6 +19,18 @@ $ python app.py
 
 Your app should now be running on [localhost:5000](http://localhost:5000/).
 
+## Required third party services
+
+This project requires API access to several 3rd party services:
+
+- Diffbot: https://app.diffbot.com/
+- LLM (one or the other)
+  - Anthropic: https://console.anthropic.com/dashboard
+  - OpenAI: https://platform.openai.com/
+
+note: the current scraper assumes you are using the Diffbot free version which only allows for 5 API calls per minute. If you have a paid account you can remove the 12 second sleep that exists in the code to rate limit calls to Diffbot.
+  
+
 ## Credits
 ### Initial basis for flask / bootstrap implementation
 
