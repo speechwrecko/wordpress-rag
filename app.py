@@ -4,8 +4,9 @@
 import os
 from flask import Flask, render_template, request, url_for, jsonify, flash, redirect
 from dotenv import load_dotenv
+import logging
 
-from scraper import scraper
+from scraper import scraper, logger
 from db import db, embeddings
 from chat import chat
 
@@ -56,11 +57,14 @@ def process_query():
 def get_answer(query):
     try:
         source = vectordb.search(query)
+        print(source)
         chatbot = chat("anthropic")
-        message = chatbot.create_response(query, data_path + "/" + source)
-    except:
+        message = chatbot.create_response(query, data_path, source)
+    except Exception as e:
+        print(e)
         message = "Sorry I am broken!!!"
-    return message, source.replace(".txt", "")
+
+    return message, (", ".join(source)).replace(".txt", "")
 
 
 def main():
@@ -68,18 +72,28 @@ def main():
     global vectordb
 
     load_dotenv()
+    logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
+
     blog_url = os.getenv('BLOG_POST_URL')
     diffbot_token = os.getenv('DIFFBOT_TOKEN')
     data_path = "blog_files"
+
+    blog_scraper = scraper(blog_url, diffbot_token)
+    log_object = logger()
+
+    logging.info("getting wordpress post URLs")    
+    post_urls = blog_scraper.get_wordpress_posts()
+
+    logging.info("Extracting text if not already extracted")
+    blog_scraper.extract_text_from_posts(post_urls)
+
+    logging.info("creating DB and collection")
     vectordb = db("wordpress_rag.db", "wordpress_collection", 768, "default", False)
-
-    if not vectordb.is_data_loaded():
-        blog_scraper = scraper(blog_url, diffbot_token)
-        post_urls = blog_scraper.get_wordpress_posts()
-        blog_scraper.extract_text_from_posts(post_urls)
-
-        vectordb = db("wordpress_rag.db", "wordpress_collection", 768, "default", False)
+    
+    if vectordb.is_data_loaded() == False or log_object.is_all_inserted() == False:
+        logging.info("upserting any new info")
         vectordb.load_data(data_path)
+    logging.info("starting FLASK server")
 
     app.run(debug=DEVELOPMENT_ENV)
 
